@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.RemoteInput;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -50,10 +51,31 @@ public class MainActivity extends AppCompatActivity {
                         R.mipmap.ic_launcher,
                         "This is an Action",
                         pendingIntent).build();
+                Intent intentreply = new Intent(MainActivity.this,
+                        ReplyActivity.class);
+                PendingIntent pendingIntentReply = PendingIntent.getActivity
+                        (MainActivity.this, 0, intentreply,
+                                PendingIntent.FLAG_UPDATE_CURRENT);
+
+                RemoteInput ri = new RemoteInput.Builder("status")
+                        .setLabel("Status report")
+                        .setChoices(new String [] {"Done", "Not yet"})
+                        .build();
+
+                NotificationCompat.Action action2 = new
+                        NotificationCompat.Action.Builder(
+                        R.mipmap.ic_launcher,
+                        "Reply",
+                        pendingIntentReply)
+                        .addRemoteInput(ri)
+                        .build();
+
+
 
                 NotificationCompat.WearableExtender extender = new
                         NotificationCompat.WearableExtender();
                 extender.addAction(action);
+                extender.addAction(action2);
 
                 String text = getString(R.string.basic_notify_msg);
                 String title = getString(R.string.notification_title);
